@@ -4,55 +4,54 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 320px;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #1e1e24;
-      color: #ffffff;
-      margin: 0;
+      width: 320px; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e24; color: #ffffff; margin: 0;
     }
-    h2 {
-      margin-top: 0;
-      font-size: 18px;
-      margin-bottom: 8px;
+    h2 { margin-top: 0; font-size: 18px; margin-bottom: 8px; }
+    p { font-size: 13px; color: #a0a0b0; line-height: 1.4; margin-bottom: 20px; }
+    .btn {
+      width: 100%; color: white; border: none; padding: 12px; font-size: 14px; 
+      font-weight: bold; border-radius: 8px; cursor: pointer; 
+      transition: background 0.2s, transform 0.1s; margin-bottom: 10px;
     }
-    p {
-      font-size: 13px;
-      color: #a0a0b0;
-      line-height: 1.4;
-      margin-bottom: 20px;
-    }
-    button {
-      width: 100%;
-      background-color: #f6412d;
-      color: white;
-      border: none;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    button:hover { background-color: #d43522; }
-    button:active { transform: scale(0.98); }
-    button:disabled {
-      background-color: #555555;
-      cursor: not-allowed;
-    }
-    #status {
-      margin-top: 15px;
-      font-size: 12px;
-      text-align: center;
-      color: #4ade80;
-      font-weight: bold;
-    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { background-color: #555555; cursor: not-allowed; }
+    
+    #export-btn { background-color: #f6412d; }
+    #export-btn:hover { background-color: #d43522; }
+    
+    #import-btn { background-color: #3b82f6; }
+    #import-btn:hover { background-color: #2563eb; }
+
+    #stop-btn { background-color: #f87171; margin-top: 15px; }
+    #stop-btn:hover { background-color: #ef4444; }
+    
+    hr { border: 0; border-top: 1px solid #333; margin: 15px 0; }
+    #status { margin-top: 10px; font-size: 12px; text-align: center; color: #4ade80; font-weight: bold; }
+
+    /* Progress Bar Styles */
+    #progress-container { display: none; text-align: center; }
+    .progress-track { width: 100%; background-color: #333; border-radius: 6px; overflow: hidden; height: 14px; margin-top: 5px; }
+    #progress-fill { width: 0%; height: 100%; background-color: #4ade80; transition: width 0.3s ease; }
   </style>
 </head>
 <body>
-  <h2>mod.io Exporter</h2>
-  <p>Back up your entire mod library to a text file. Perfect for migrating setups or keeping records of your server plugins.</p>
-  <button id="action-btn">Loading...</button>
+  <h2>mod.io Exporter & Importer</h2>
+  
+  <div id="main-ui">
+    <p>Back up your library to a .txt file, or upload a previous backup to automatically subscribe.</p>
+    <button id="export-btn" class="btn">📥 Export Subscribed Mods</button>
+    <hr>
+    <input type="file" id="file-input" accept=".txt" style="display:none;">
+    <button id="import-btn" class="btn">⬆️ Import from .txt</button>
+  </div>
+
+  <div id="progress-container">
+    <h3 id="progress-text" style="margin:0 0 5px 0; color: #4ade80;">Importing... 0 / 0</h3>
+    <div class="progress-track"><div id="progress-fill"></div></div>
+    <button id="stop-btn" class="btn">🛑 Stop Import</button>
+  </div>
+
   <div id="status"></div>
   <script src="popup.js"></script>
 </body>
