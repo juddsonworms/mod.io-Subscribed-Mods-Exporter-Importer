@@ -28,3 +28,4 @@ Since this extension is not currently published on the Chrome Web Store, you can
 4. **Export:** Click the extension icon again and click **"📥 Export Subscribed Mods"**.
 5. **Wait:** A dark overlay will appear on your screen showing the scraping progress. Let it run!
 6. **Save:** Once finished, a `.txt` file will automatically download to your computer.
+7. **Import:** Once You have your txt you can now share you txt or import mods on a different account!
