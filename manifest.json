@@ -1,13 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "mod.io Library Exporter",
-  "version": "2.0",
-  "description": "Easily back up your subscribed mods into a clean text file.",
+  "name": "mod.io Exporter & Importer",
+  "version": "4.0",
+  "description": "Easily back up and restore your subscribed mods.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://*.mod.io/*",
+    "https://mod.io/*"
   ],
   "action": {
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   }
 }
