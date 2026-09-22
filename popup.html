@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e24;
+      color: #ffffff;
+      margin: 0;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 13px;
+      color: #a0a0b0;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      background-color: #f6412d;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover { background-color: #d43522; }
+    button:active { transform: scale(0.98); }
+    button:disabled {
+      background-color: #555555;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 12px;
+      text-align: center;
+      color: #4ade80;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>mod.io Exporter</h2>
+  <p>Back up your entire mod library to a text file. Perfect for migrating setups or keeping records of your server plugins.</p>
+  <button id="action-btn">Loading...</button>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
