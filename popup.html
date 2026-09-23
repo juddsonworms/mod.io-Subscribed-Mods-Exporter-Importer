@@ -1,58 +1,244 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <style>
-    body {
-      width: 320px; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #1e1e24; color: #ffffff; margin: 0;
-    }
-    h2 { margin-top: 0; font-size: 18px; margin-bottom: 8px; }
-    p { font-size: 13px; color: #a0a0b0; line-height: 1.4; margin-bottom: 20px; }
-    .btn {
-      width: 100%; color: white; border: none; padding: 12px; font-size: 14px; 
-      font-weight: bold; border-radius: 8px; cursor: pointer; 
-      transition: background 0.2s, transform 0.1s; margin-bottom: 10px;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { background-color: #555555; cursor: not-allowed; }
-    
-    #export-btn { background-color: #f6412d; }
-    #export-btn:hover { background-color: #d43522; }
-    
-    #import-btn { background-color: #3b82f6; }
-    #import-btn:hover { background-color: #2563eb; }
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: #14131a;
+    --surface: #1e1c26;
+    --surface-raised: #262330;
+    --border: #322f3f;
+    --text: #f5f3f8;
+    --text-dim: #8d899c;
+    --brand: #f6412d;
+    --brand-dark: #d63a29;
+    --accent: #6c7bff;
+    --accent-dark: #5563e0;
+    --ok: #35c48f;
+    --warn: #e8b339;
+    --err: #f0576b;
+  }
 
-    #stop-btn { background-color: #f87171; margin-top: 15px; }
-    #stop-btn:hover { background-color: #ef4444; }
-    
-    hr { border: 0; border-top: 1px solid #333; margin: 15px 0; }
-    #status { margin-top: 10px; font-size: 12px; text-align: center; color: #4ade80; font-weight: bold; }
+  * { box-sizing: border-box; }
 
-    /* Progress Bar Styles */
-    #progress-container { display: none; text-align: center; }
-    .progress-track { width: 100%; background-color: #333; border-radius: 6px; overflow: hidden; height: 14px; margin-top: 5px; }
-    #progress-fill { width: 0%; height: 100%; background-color: #4ade80; transition: width 0.3s ease; }
-  </style>
+  body {
+    width: 360px;
+    margin: 0;
+    padding: 16px;
+    background: var(--bg);
+    color: var(--text);
+    font: 13px/1.45 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  header { display: flex; align-items: center; gap: 10px; padding: 2px 2px 14px; }
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 9px; flex: none;
+    background: linear-gradient(155deg, var(--brand), var(--brand-dark));
+    display: flex; align-items: center; justify-content: center;
+  }
+  h1 { font-size: 14.5px; font-weight: 700; margin: 0; letter-spacing: .1px; }
+  .tagline { margin: 1px 0 0; font-size: 11.5px; color: var(--text-dim); }
+
+  section, .action-card { margin-bottom: 10px; }
+
+  .action-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .action-card-top { display: flex; gap: 10px; margin-bottom: 12px; }
+  .icon {
+    width: 34px; height: 34px; border-radius: 9px; flex: none;
+    display: flex; align-items: center; justify-content: center; color: #fff;
+  }
+  .icon-export { background: var(--brand); }
+  .icon-import { background: var(--accent); }
+  .action-card h2 { font-size: 13.5px; margin: 2px 0 3px; font-weight: 600; }
+  .action-card p { margin: 0; color: var(--text-dim); font-size: 11.5px; }
+
+  .btn {
+    width: 100%; border: none; padding: 10px; font-size: 13px; font-weight: 600;
+    border-radius: 9px; cursor: pointer; color: #fff; transition: filter .15s, transform .08s;
+    font-family: inherit;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { background: #423f4c !important; color: #7d7889; cursor: not-allowed; }
+  .btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-export { background: var(--brand); }
+  .btn-import { background: var(--accent); }
+  .btn-stop {
+    width: 100%; background: transparent; border: 1px solid #4a2a2f; color: var(--err);
+    margin-top: 12px; padding: 9px;
+  }
+  .btn-ghost {
+    background: var(--surface-raised); border: 1px solid var(--border); color: var(--text);
+  }
+  .btn-primary { background: var(--accent); }
+  .result-actions { display: flex; gap: 8px; }
+  .result-actions .btn { width: auto; flex: 1; }
+
+  details.settings {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  details.settings summary {
+    cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--text);
+    list-style: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  details.settings summary::-webkit-details-marker { display: none; }
+  summary::after { content: '⌄'; color: var(--text-dim); font-size: 14px; }
+  details[open] summary::after { content: '⌃'; }
+  .speed-row { display: flex; gap: 6px; margin-top: 10px; }
+  .speed-row button {
+    flex: 1; padding: 7px 0; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface-raised); color: var(--text-dim); font-size: 11.5px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+  }
+  .speed-row button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .hint { margin: 9px 0 0; color: var(--text-dim); font-size: 11px; }
+
+  .banner {
+    background: var(--surface-raised); border: 1px solid #4a3a2a; border-left: 3px solid var(--warn);
+    border-radius: 10px; padding: 11px 12px; margin-bottom: 12px;
+  }
+  .banner p { margin: 0 0 8px; font-size: 12px; }
+  .banner-actions { display: flex; gap: 8px; }
+  .banner-actions .btn { width: auto; flex: 1; padding: 7px; font-size: 12px; }
+
+  .progress-view h2 { font-size: 14px; margin: 2px 0 12px; text-align: center; }
+  .stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .stat {
+    flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 8px 0; text-align: center;
+  }
+  .stat span {
+    display: block; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .stat label { font-size: 10px; color: var(--text-dim); }
+  .stat:nth-child(1) span { color: var(--ok); }
+  .stat:nth-child(2) span { color: var(--warn); }
+  .stat:nth-child(3) span { color: var(--err); }
+
+  .progress-track { width: 100%; background: var(--surface-raised); border-radius: 6px; overflow: hidden; height: 8px; }
+  #progress-fill { width: 0%; height: 100%; background: var(--accent); transition: width .25s ease; }
+  #progress-caption {
+    text-align: center; margin: 7px 0 12px; color: var(--text-dim); font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .log-list {
+    list-style: none; margin: 0; padding: 0; max-height: 108px; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .log-list li {
+    display: flex; gap: 7px; align-items: flex-start; padding: 6px 10px;
+    font-size: 11px; border-bottom: 1px solid var(--border);
+  }
+  .log-list li:last-child { border-bottom: none; }
+  .log-list .dot { flex: none; margin-top: 3px; width: 6px; height: 6px; border-radius: 50%; }
+  .log-list .name { color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .log-list:empty::after {
+    content: 'Waiting for the first result…'; display: block; padding: 12px; text-align: center;
+    color: var(--text-dim); font-size: 11px;
+  }
+
+  .result-panel h2 { font-size: 14px; margin: 2px 0 6px; text-align: center; }
+  .result-panel p { text-align: center; color: var(--text-dim); font-size: 12px; margin: 0 0 12px; }
+
+  footer#status-line {
+    text-align: center; font-size: 11px; color: var(--text-dim); min-height: 14px; margin-top: 2px;
+  }
+
+  [hidden] { display: none !important; }
+</style>
 </head>
 <body>
-  <h2>mod.io Exporter & Importer</h2>
-  
-  <div id="main-ui">
-    <p>Back up your library to a .txt file, or upload a previous backup to automatically subscribe.</p>
-    <button id="export-btn" class="btn">📥 Export Subscribed Mods</button>
-    <hr>
-    <input type="file" id="file-input" accept=".txt" style="display:none;">
-    <button id="import-btn" class="btn">⬆️ Import from .txt</button>
+
+  <header>
+    <div class="brand-mark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 19h15"/></svg>
+    </div>
+    <div>
+      <h1>mod.io Exporter &amp; Importer</h1>
+      <p class="tagline">Back up and restore your subscriptions</p>
+    </div>
+  </header>
+
+  <div id="interrupted-banner" class="banner" hidden>
+    <p><strong>An import was interrupted</strong> — <span id="interrupted-detail"></span></p>
+    <div class="banner-actions">
+      <button id="resume-btn" class="btn btn-primary">Resume</button>
+      <button id="discard-btn" class="btn btn-ghost">Discard</button>
+    </div>
   </div>
 
-  <div id="progress-container">
-    <h3 id="progress-text" style="margin:0 0 5px 0; color: #4ade80;">Importing... 0 / 0</h3>
+  <main id="main-view">
+    <section class="action-card">
+      <div class="action-card-top">
+        <span class="icon icon-export">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 19h15"/></svg>
+        </span>
+        <div>
+          <h2>Export library</h2>
+          <p id="export-desc">Save every mod you're subscribed to as a backup file.</p>
+        </div>
+      </div>
+      <button id="export-btn" class="btn btn-export">Export mods</button>
+    </section>
+
+    <section class="action-card">
+      <div class="action-card-top">
+        <span class="icon icon-import">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V9"/><path d="M7.5 12.5 12 8l4.5 4.5"/><path d="M4.5 4h15"/></svg>
+        </span>
+        <div>
+          <h2>Import backup</h2>
+          <p>Subscribe to every mod listed in a backup file.</p>
+        </div>
+      </div>
+      <button id="import-btn" class="btn btn-import">Choose backup file…</button>
+      <input type="file" id="file-input" accept=".txt" hidden>
+    </section>
+
+    <details class="settings">
+      <summary>Import speed</summary>
+      <div class="speed-row" id="speed-row">
+        <button type="button" data-speed="safe">Safe</button>
+        <button type="button" data-speed="normal">Normal</button>
+        <button type="button" data-speed="fast">Fast</button>
+      </div>
+      <p class="hint" id="speed-hint"></p>
+    </details>
+  </main>
+
+  <section id="progress-view" class="progress-view" hidden>
+    <h2 id="progress-title">Importing…</h2>
+    <div class="stat-row">
+      <div class="stat"><span id="stat-ok">0</span><label>subscribed</label></div>
+      <div class="stat"><span id="stat-skip">0</span><label>already had</label></div>
+      <div class="stat"><span id="stat-fail">0</span><label>failed</label></div>
+    </div>
     <div class="progress-track"><div id="progress-fill"></div></div>
-    <button id="stop-btn" class="btn">🛑 Stop Import</button>
-  </div>
+    <p id="progress-caption">0 / 0</p>
+    <ul id="log-list" class="log-list"></ul>
+    <button id="stop-btn" class="btn btn-stop">Stop import</button>
+  </section>
 
-  <div id="status"></div>
+  <section id="result-panel" class="result-panel" hidden>
+    <h2 id="result-title">Import complete</h2>
+    <p id="result-summary"></p>
+    <div class="result-actions">
+      <button id="retry-btn" class="btn btn-ghost" hidden>Retry failed</button>
+      <button id="report-btn" class="btn btn-ghost" hidden>Download report</button>
+      <button id="dismiss-btn" class="btn btn-primary">Done</button>
+    </div>
+  </section>
+
+  <footer id="status-line"></footer>
+
   <script src="popup.js"></script>
 </body>
 </html>

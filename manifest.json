@@ -1,22 +1,44 @@
 {
   "manifest_version": 3,
   "name": "mod.io Exporter & Importer",
-  "version": "4.0",
-  "description": "Easily back up and restore your subscribed mods.",
+  "version": "5.0",
+  "description": "Back up your subscribed mods to a file and restore them on any account — with live progress, verified subscribes, automatic retries, and a one-click button right on your mod.io library page.",
   "permissions": [
     "activeTab",
     "scripting",
     "tabs",
-    "notifications"
+    "notifications",
+    "storage"
   ],
   "host_permissions": [
     "https://*.mod.io/*",
     "https://mod.io/*"
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "mod.io Exporter & Importer",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mod.io/library*",
+        "https://mod.io/me/mods*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   }
 }
